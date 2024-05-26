@@ -19,11 +19,19 @@ class StreamPlatformSerializer(serializers.ModelSerializer):
         return len(object.name)   
 
 class ReviewSerializer(serializers.ModelSerializer):
+    movie = serializers.PrimaryKeyRelatedField(read_only = True)
+    review_user = serializers.StringRelatedField(read_only=True)
+    
     class Meta:
         model = Review
         fields = "__all__"
         
-               
+'''        
+class ReviewCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        exclude = ['movie']
+'''                      
 '''
 class MovieSerializer(serializers.Serializer):
     id  = serializers.IntegerField(read_only=True)

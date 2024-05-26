@@ -1,36 +1,38 @@
 from watchlist_app.models import WatchList, StreamPlatform, Review
 from watchlist_app.api.serializers import WatchListSerializer, StreamPlatformSerializer, ReviewSerializer
 from rest_framework.response import Response
-from rest_framework import status
 from rest_framework.views import APIView
-from rest_framework import generics, mixins
+from rest_framework import status
+from rest_framework import generics
+from rest_framework.exceptions import ValidationError
 
-class ReviewAV(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
-    queryset = Review.objects.all()
+class ReviewAV(generics.ListAPIView):
     serializer_class = ReviewSerializer
-
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
     
-class ReviewDetailsAV(mixins.RetrieveModelMixin, generics.GenericAPIView):
+    def get_queryset(self):
+        return Review.objects.filter(movie=self.kwargs.get('pk'))
+
+class ReviewDetailsAV(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
 
-    def get(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
-       
-class StreamPlatformAV(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+class ReviewCreateAV(generics.CreateAPIView):
+    serializer_class = ReviewSerializer
+    
+    def get_queryset(self):
+        return Review.objects.all()
+    
+    def perform_create(self, serializer):
+        movie = WatchList.objects.get(pk=self.kwargs.get('pk'))
+        review_user = self.request.user
+        reviews = Review.objects.filter(movie=movie, review_user=review_user)
+        if reviews.exists():
+            raise ValidationError("You already posted a review for this movie")
+        serializer.save(movie=movie, review_user=review_user)    
+    
+class StreamPlatformAV(generics.ListCreateAPIView):
     queryset = StreamPlatform.objects.all()
     serializer_class = StreamPlatformSerializer
-
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
 
 class WatchListAV(APIView):
     def get(self, request):
@@ -73,6 +75,25 @@ class MovieDetailsAV(APIView):
             return Response({'SUCCESS': f'Movie {pk} successfully deleted.'}, status=status.HTTP_204_NO_CONTENT)
         except WatchList.DoesNotExist:
             return Response({'Error': f'Movie {pk} Does not exist'}, status=status.HTTP_404_NOT_FOUND)
+
+'''
+class ReviewAV(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+    
+class ReviewDetailsAV(mixins.RetrieveModelMixin, generics.GenericAPIView):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+'''       
 
 '''
 class StreamPlatformAV(APIView):

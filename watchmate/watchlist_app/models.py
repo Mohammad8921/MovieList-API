@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.contrib.auth.models import User
 # Create your models here.
 
 class WatchList(models.Model):
@@ -21,6 +22,7 @@ class StreamPlatform(models.Model):
         return self.name
 
 class Review(models.Model):
+    review_user = models.ForeignKey(User, on_delete=models.CASCADE,default=None)
     rating = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
     description = models.CharField(max_length=300)
     movie = models.ForeignKey('WatchList', on_delete=models.CASCADE, related_name='reviews')
