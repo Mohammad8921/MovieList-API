@@ -20,7 +20,7 @@ class StreamPlatformSerializer(serializers.ModelSerializer):
 
 class ReviewSerializer(serializers.ModelSerializer):
     movie = serializers.PrimaryKeyRelatedField(read_only = True)
-    review_user = serializers.StringRelatedField(read_only=True)
+    review_user = serializers.StringRelatedField(read_only = True)
     
     class Meta:
         model = Review

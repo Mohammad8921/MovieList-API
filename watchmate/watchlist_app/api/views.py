@@ -5,9 +5,12 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework import generics
 from rest_framework.exceptions import ValidationError
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from watchlist_app.api.permissions import IsAdminOrReadOnly, IsReviewUserOrReadOnly
 
 class ReviewAV(generics.ListAPIView):
     serializer_class = ReviewSerializer
+    permission_classes = [IsAdminOrReadOnly]
     
     def get_queryset(self):
         return Review.objects.filter(movie=self.kwargs.get('pk'))
@@ -15,9 +18,11 @@ class ReviewAV(generics.ListAPIView):
 class ReviewDetailsAV(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+    permission_classes = [IsReviewUserOrReadOnly]
 
 class ReviewCreateAV(generics.CreateAPIView):
     serializer_class = ReviewSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
     
     def get_queryset(self):
         return Review.objects.all()
@@ -26,15 +31,27 @@ class ReviewCreateAV(generics.CreateAPIView):
         movie = WatchList.objects.get(pk=self.kwargs.get('pk'))
         review_user = self.request.user
         reviews = Review.objects.filter(movie=movie, review_user=review_user)
+        
         if reviews.exists():
             raise ValidationError("You already posted a review for this movie")
+        
+        if movie.ave_rating == 0:
+            movie.ave_rating = serializer.validated_data['rating']
+        else:
+            movie.ave_rating = (movie.rating_number*movie.ave_rating + serializer.validated_data['rating'])/(movie.rating_number+1)   
+        movie.rating_number += 1
+        
+        movie.save()    
         serializer.save(movie=movie, review_user=review_user)    
     
 class StreamPlatformAV(generics.ListCreateAPIView):
     queryset = StreamPlatform.objects.all()
     serializer_class = StreamPlatformSerializer
+    permission_classes = [IsAdminOrReadOnly]
 
 class WatchListAV(APIView):
+    permission_classes = [IsAdminOrReadOnly]
+    
     def get(self, request):
         movies = WatchList.objects.all()
         serializer = WatchListSerializer(movies, many=True)
@@ -48,6 +65,8 @@ class WatchListAV(APIView):
 
 
 class MovieDetailsAV(APIView):
+    permission_classes = [IsAdminOrReadOnly]
+    
     def get(self, request, pk):
         try:
             movie = WatchList.objects.get(pk=pk)
