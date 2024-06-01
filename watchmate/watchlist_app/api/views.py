@@ -10,7 +10,7 @@ from watchlist_app.api.permissions import IsAdminOrReadOnly, IsReviewUserOrReadO
 
 class ReviewAV(generics.ListAPIView):
     serializer_class = ReviewSerializer
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
         return Review.objects.filter(movie=self.kwargs.get('pk'))
