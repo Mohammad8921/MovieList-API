@@ -5,8 +5,11 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework import generics
 from rest_framework.exceptions import ValidationError
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from rest_framework.permissions import IsAuthenticated
 from watchlist_app.api.permissions import IsAdminOrReadOnly, IsReviewUserOrReadOnly
+from watchlist_app.api.throttling import RevireCreateThrottle, ReviewDetailThrottle
+from rest_framework.throttling import AnonRateThrottle
+from rest_framework import filters
 
 class ReviewAV(generics.ListAPIView):
     serializer_class = ReviewSerializer
@@ -19,10 +22,12 @@ class ReviewDetailsAV(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     permission_classes = [IsReviewUserOrReadOnly]
+    throttle_classes = [ReviewDetailThrottle, AnonRateThrottle]
 
 class ReviewCreateAV(generics.CreateAPIView):
     serializer_class = ReviewSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
+    throttle_classes = [RevireCreateThrottle]
     
     def get_queryset(self):
         return Review.objects.all()
@@ -49,6 +54,13 @@ class StreamPlatformAV(generics.ListCreateAPIView):
     serializer_class = StreamPlatformSerializer
     permission_classes = [IsAdminOrReadOnly]
 
+class WatchListSearch(generics.ListAPIView):
+    queryset = WatchList.objects.all()
+    serializer_class = WatchListSerializer
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['title']
+    ordering_fields = ['avg_rating']
+    
 class WatchListAV(APIView):
     permission_classes = [IsAdminOrReadOnly]
     
