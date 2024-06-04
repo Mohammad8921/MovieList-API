@@ -137,5 +137,8 @@ REST_FRAMEWORK = {
         'user': '500/day',
         'review-create': '3/day',
         'review-detail': '10/day'
-    }
+    },
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ]
 }

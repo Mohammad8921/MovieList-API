@@ -10,9 +10,11 @@ from watchlist_app.api.permissions import IsAdminOrReadOnly, IsReviewUserOrReadO
 from watchlist_app.api.throttling import RevireCreateThrottle, ReviewDetailThrottle
 from rest_framework.throttling import AnonRateThrottle
 from rest_framework import filters
+from watchlist_app.api.pagination import WatchListPagination, ReviewListPagination
 
 class ReviewAV(generics.ListAPIView):
     serializer_class = ReviewSerializer
+    pagination_class = ReviewListPagination
     #permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
@@ -54,10 +56,11 @@ class StreamPlatformAV(generics.ListCreateAPIView):
     serializer_class = StreamPlatformSerializer
     permission_classes = [IsAdminOrReadOnly]
 
-class WatchListSearch(generics.ListAPIView):
+class WatchListGV(generics.ListAPIView):
     queryset = WatchList.objects.all()
     serializer_class = WatchListSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    pagination_class = WatchListPagination
     search_fields = ['title']
     ordering_fields = ['avg_rating']
     
