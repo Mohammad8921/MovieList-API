@@ -12,6 +12,17 @@ from rest_framework.throttling import AnonRateThrottle
 from rest_framework import filters
 from watchlist_app.api.pagination import WatchListPagination, ReviewListPagination
 
+class UserReview(generics.ListAPIView):
+    serializer_class = ReviewSerializer
+    
+    def get_queryset(self):
+        username = self.request.query_params.get('username', None)
+        if not username:
+            return Review.objects.all()
+        return Review.objects.filter(review_user__username=username)
+    
+    search_fields = ['review_user__username']
+    
 class ReviewAV(generics.ListAPIView):
     serializer_class = ReviewSerializer
     pagination_class = ReviewListPagination
