@@ -67,27 +67,13 @@ class StreamPlatformAV(generics.ListCreateAPIView):
     serializer_class = StreamPlatformSerializer
     permission_classes = [IsAdminOrReadOnly]
 
-class WatchListGV(generics.ListAPIView):
+class WatchListGV(generics.ListCreateAPIView):
     queryset = WatchList.objects.all()
     serializer_class = WatchListSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     pagination_class = WatchListPagination
     search_fields = ['title']
     ordering_fields = ['avg_rating']
-    
-class WatchListAV(APIView):
-    permission_classes = [IsAdminOrReadOnly]
-    
-    def get(self, request):
-        movies = WatchList.objects.all()
-        serializer = WatchListSerializer(movies, many=True)
-        return Response(serializer.data)
-
-    def post(self, request):
-        serializer = WatchListSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class MovieDetailsAV(APIView):
@@ -120,6 +106,26 @@ class MovieDetailsAV(APIView):
             return Response({'SUCCESS': f'Movie {pk} successfully deleted.'}, status=status.HTTP_204_NO_CONTENT)
         except WatchList.DoesNotExist:
             return Response({'Error': f'Movie {pk} Does not exist'}, status=status.HTTP_404_NOT_FOUND)
+
+'''    
+class WatchListAV(APIView):
+    permission_classes = [IsAdminOrReadOnly]
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    pagination_class = WatchListPagination
+    search_fields = ['title']
+    ordering_fields = ['avg_rating']
+    
+    def get(self, request):
+        movies = WatchList.objects.all()
+        serializer = WatchListSerializer(movies, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = WatchListSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+'''
 
 '''
 class ReviewAV(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
