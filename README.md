@@ -35,3 +35,19 @@ Response:
     ]
 }
 ```
+Query:
+`[GET] http://127.0.0.1:8000/movies/reviews/list/?username=mohammad`
+Response:
+```
+[
+    {
+        "id": 5,
+        "movie": 1,
+        "review_user": "mohammad",
+        "rating": 2,
+        "description": "Review 1 - Updated 3",
+        "created": "2024-06-02T07:40:05.327466Z",
+        "update": "2024-06-02T07:40:05.327466Z"
+    }
+]
+```
