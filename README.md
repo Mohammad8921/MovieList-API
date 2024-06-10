@@ -1,4 +1,4 @@
-Query:
+* Query:
 
 `[GET] http://127.0.0.1:8000/movies/list/?p=3&s=2`
 
@@ -35,7 +35,7 @@ Response:
     ]
 }
 ```
-Query:
+* Query:
 
 `[GET] http://127.0.0.1:8000/movies/reviews/list/?username=mohammad`
 
@@ -54,7 +54,7 @@ Response:
     }
 ]
 ```
-Query:
+* Query:
 
 `[PUT] http://127.0.0.1:8000/movies/reviews/5/`
 
@@ -71,7 +71,7 @@ Response:
     "update": "2024-06-10T08:28:34.792551Z"
 }
 ```
-Query:
+* Query:
 
 `[GET] http://127.0.0.1:8000/movies/list/?search=Note`
 
@@ -111,7 +111,7 @@ Response:
     ]
 }
 ```
-Query:
+* Query:
 
 `[GET] http://127.0.0.1:8000/movies/list/?ordering=-ave_rating&s=10`
 
@@ -207,7 +207,7 @@ Response:
 }
 ```
 
-Query:
+* Query:
 
 `[POST] http://127.0.0.1:8000/movies/7/review-create/`
 
