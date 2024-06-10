@@ -38,6 +38,7 @@ Response:
 Query:
 
 `[GET] http://127.0.0.1:8000/movies/reviews/list/?username=mohammad`
+
 Response:
 
 ```
