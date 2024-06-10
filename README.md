@@ -54,3 +54,21 @@ Response:
     }
 ]
 ```
+Query:
+
+`[PUT] http://127.0.0.1:8000/movies/reviews/5/`
+
+Response:
+
+```
+{
+    "id": 5,
+    "movie": 1,
+    "review_user": "mohammad",
+    "rating": 4,
+    "description": "Review 1 - Updated 4",
+    "created": "2024-06-02T07:40:05.327466Z",
+    "update": "2024-06-10T08:28:34.792551Z"
+}
+```
+
