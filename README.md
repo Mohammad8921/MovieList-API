@@ -112,7 +112,9 @@ Response:
 }
 ```
 Query:
+
 `[GET] http://127.0.0.1:8000/movies/list/?ordering=-ave_rating&s=10`
+
 Response:
 
 ```
@@ -205,4 +207,21 @@ Response:
 }
 ```
 
+Query:
+
+`[POST] http://127.0.0.1:8000/movies/7/review-create/`
+
+Response:
+
+```
+{
+    "id": 6,
+    "movie": 7,
+    "review_user": "mohammad",
+    "rating": 5,
+    "description": "A Review",
+    "created": "2024-06-10T08:35:29.674315Z",
+    "update": "2024-06-10T08:35:29.674315Z"
+}
+```
 
