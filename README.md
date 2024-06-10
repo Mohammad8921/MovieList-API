@@ -71,4 +71,46 @@ Response:
     "update": "2024-06-10T08:28:34.792551Z"
 }
 ```
+Query:
+
+`[GET] http://127.0.0.1:8000/movies/list/?search=Note`
+
+Response:
+
+```
+{
+    "count": 2,
+    "next": null,
+    "previous": null,
+    "results": [
+        {
+            "id": 1,
+            "reviews": [
+                4,
+                5
+            ],
+            "title": "NoteBook",
+            "storyline": "abcdef",
+            "active": true,
+            "created": "2024-05-23T09:44:15.796844Z",
+            "ave_rating": 2.0,
+            "rating_number": 3,
+            "platform": 1
+        },
+        {
+            "id": 7,
+            "reviews": [],
+            "title": "NoteBook 2",
+            "storyline": "abcdef",
+            "active": false,
+            "created": "2024-06-07T07:00:07.142194Z",
+            "ave_rating": 0.0,
+            "rating_number": 0,
+            "platform": 1
+        }
+    ]
+}
+```
+
+
 
