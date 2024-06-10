@@ -6,7 +6,6 @@ Response:
 
 `
 {
-
     "count": 7,
     "next": "http://127.0.0.1:8000/movies/list/?p=4&s=2",
     "previous": "http://127.0.0.1:8000/movies/list/?p=2&s=2",
